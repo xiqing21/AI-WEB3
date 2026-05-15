@@ -56,6 +56,14 @@ serve(async (request) => {
   }
 
   const emails = [...new Set(subscribers?.map((row) => row.email).filter(Boolean) ?? [])];
+  console.log(
+    JSON.stringify({
+      event: "post_email_recipients_loaded",
+      post_id,
+      creator_id: post.creator_id,
+      recipient_count: emails.length,
+    }),
+  );
 
   const title = escapeHtml(post.title);
   const creator = escapeHtml(post.profiles?.display_name ?? "A creator");
@@ -88,6 +96,14 @@ serve(async (request) => {
       html,
     });
   }
+
+  console.log(
+    JSON.stringify({
+      event: "post_email_send_finished",
+      post_id,
+      sent: emails.length,
+    }),
+  );
 
   return Response.json({ sent: emails.length });
 });

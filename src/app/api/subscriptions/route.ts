@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { createPublicClient, http, parseEther } from "viem";
 import { getUser } from "@/lib/auth";
+import { escapeHtml, getFromAddress, getResend } from "@/lib/email";
 import { createClient } from "@/lib/supabase/server";
 import { selectedChain } from "@/lib/web3/chains";
 
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
     await Promise.all([
       supabase
         .from("profiles")
-        .select("wallet_address")
+        .select("wallet_address,display_name")
         .eq("id", creatorId)
         .single(),
       supabase
@@ -103,6 +104,31 @@ export async function POST(request: Request) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  after(async () => {
+    const resend = getResend();
+    if (!resend || !user.email) {
+      return;
+    }
+
+    const creatorName = escapeHtml(creator.display_name ?? "this creator");
+    const amount = escapeHtml(requiredPriceMon);
+    const safeHash = escapeHtml(txHash);
+
+    await resend.emails.send({
+      from: getFromAddress(),
+      to: user.email,
+      subject: `Subscription active: ${creator.display_name ?? "Creator"}`,
+      html: `
+        <div style="font-family:Arial,sans-serif;line-height:1.6;color:#1f2530">
+          <h1>Your subscription is active</h1>
+          <p>You subscribed to <strong>${creatorName}</strong>.</p>
+          <p>Amount: <strong>${amount} MON</strong></p>
+          <p>Transaction: <code>${safeHash}</code></p>
+        </div>
+      `,
+    });
+  });
 
   return NextResponse.json({ ok: true });
 }

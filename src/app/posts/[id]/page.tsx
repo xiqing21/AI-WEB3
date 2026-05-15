@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MarkdownBody } from "@/components/posts/markdown-body";
 import { SubscribeButton } from "@/components/wallet/subscribe-button";
 import { getUser } from "@/lib/auth";
 import { getDictionary } from "@/lib/i18n";
@@ -57,7 +58,7 @@ export default async function PostPage({
         <time>{new Date(publicPost.created_at).toLocaleString()}</time>
 
         {canReadBody ? (
-          <div className="post-body">{bodyPost?.body}</div>
+          <MarkdownBody body={bodyPost?.body ?? ""} />
         ) : (
           <div className="paywall">
             <h2>{t.paidBodyLocked}</h2>

@@ -56,6 +56,17 @@ export const dictionary = {
     subscribeFor: "Subscribe for",
     subscribing: "Subscribing...",
     viewTransaction: "View transaction",
+    byCreator: "By",
+    paymentSummary: "Payment summary",
+    networkFeeExtra: "Network gas is charged separately by your wallet.",
+    recipientWallet: "Recipient",
+    walletPromptNote:
+      "Some wallets label Monad native transfers as an unknown transaction type. Confirm the amount and recipient here before approving.",
+    connectWalletToFill: "Connect a wallet to auto-fill this address.",
+    useConnectedWallet: "Use connected wallet",
+    connectedWalletReady: "Connected wallet detected.",
+    welcomeEmailQueued: "Welcome email queued.",
+    subscriptionEmailQueued: "Subscription receipt email queued.",
   },
   zh: {
     navWrite: "写文章",
@@ -111,6 +122,17 @@ export const dictionary = {
     subscribeFor: "订阅价格",
     subscribing: "订阅中...",
     viewTransaction: "查看交易",
+    byCreator: "作者",
+    paymentSummary: "支付确认",
+    networkFeeExtra: "钱包还会另外收取网络 gas。",
+    recipientWallet: "收款地址",
+    walletPromptNote:
+      "有些钱包会把 Monad 原生转账显示成“未知交易类型”。请先在这里确认金额和收款地址，再去钱包里批准。",
+    connectWalletToFill: "连接钱包后可以自动填入这个地址。",
+    useConnectedWallet: "使用已连接钱包",
+    connectedWalletReady: "检测到已连接钱包。",
+    welcomeEmailQueued: "欢迎邮件已加入发送队列。",
+    subscriptionEmailQueued: "订阅收据邮件已加入发送队列。",
   },
 } as const;
 

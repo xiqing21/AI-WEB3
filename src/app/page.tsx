@@ -8,21 +8,25 @@ const demoPosts = [
     id: "demo-politics",
     title: "Election data rooms, prediction markets, and the new attention stack",
     theme: "Politics",
+    creator_display_name: "Monograph Desk",
   },
   {
     id: "demo-finance",
     title: "Why treasury desks are watching MON liquidity like a rates market",
     theme: "Finance",
+    creator_display_name: "Monograph Desk",
   },
   {
     id: "demo-web3",
     title: "The Web3 app layer is moving from wallets to paid relationships",
     theme: "Web3",
+    creator_display_name: "Monograph Desk",
   },
   {
     id: "demo-data",
     title: "Big data teams are rebuilding feeds around real-time subscription checks",
     theme: "Big Data",
+    creator_display_name: "Monograph Desk",
   },
 ];
 
@@ -32,7 +36,7 @@ export default async function Home() {
   const supabase = await createClient();
   const { data: posts } = await supabase
     .from("public_posts")
-    .select("id,title,cover_path,created_at,creator_id")
+    .select("id,title,cover_path,created_at,creator_id,creator_display_name")
     .order("created_at", { ascending: false })
     .limit(8);
 
@@ -51,15 +55,6 @@ export default async function Home() {
               {t.becomeCreator}
             </Link>
           </div>
-        </div>
-        <div className="hero-tape">
-          {demoPosts.map((post) => (
-            <article key={post.id}>
-              <span>{post.theme}</span>
-              <h2>{post.title}</h2>
-              <p>{t.paidPreview}</p>
-            </article>
-          ))}
         </div>
       </section>
 
@@ -84,6 +79,9 @@ export default async function Home() {
                     ? new Date(post.created_at).toLocaleDateString()
                     : t.seedIdea}
                 </time>
+                <p className="post-author">
+                  {t.byCreator} {post.creator_display_name}
+                </p>
                 <h3>{post.title}</h3>
               </div>
             </Link>

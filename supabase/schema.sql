@@ -85,12 +85,14 @@ create policy "subscribers delete own subscriptions"
 -- id, title, cover_path, and created_at from it for paginated feeds.
 create or replace view public.public_posts as
 select
-  id,
-  creator_id,
-  title,
-  cover_path,
-  created_at
-from public.posts;
+  posts.id,
+  posts.creator_id,
+  coalesce(profiles.display_name, 'Untitled creator') as creator_display_name,
+  posts.title,
+  posts.cover_path,
+  posts.created_at
+from public.posts
+left join public.profiles on profiles.id = posts.creator_id;
 
 grant select on public.public_posts to anon, authenticated;
 

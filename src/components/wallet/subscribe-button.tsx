@@ -20,7 +20,7 @@ export function SubscribeButton({
   locale: Locale;
 }) {
   const t = getDictionary(locale);
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
   const [status, setStatus] = useState<string | null>(null);
@@ -48,6 +48,7 @@ export function SubscribeButton({
     try {
       setStatus("Waiting for wallet confirmation...");
       const hash = await walletClient.sendTransaction({
+        account: address as Address,
         chain: selectedChain(),
         to: creatorWallet as Address,
         value: parseEther(priceMon),
@@ -93,6 +94,17 @@ export function SubscribeButton({
 
   return (
     <div className="subscribe-box">
+      <div className="payment-summary">
+        <div>
+          <span>{t.paymentSummary}</span>
+          <strong>{priceMon} MON</strong>
+        </div>
+        <p>
+          {t.recipientWallet}: <code>{creatorWallet}</code>
+        </p>
+        <p>{t.networkFeeExtra}</p>
+        <p>{t.walletPromptNote}</p>
+      </div>
       <button
         className="clay-button clay-button-primary"
         disabled={isPending}

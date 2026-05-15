@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useAccount } from "wagmi";
 import { createClient } from "@/lib/supabase/client";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n";
@@ -20,6 +21,9 @@ export function AuthForm({ mode, locale }: { mode: AuthMode; locale: Locale }) {
   const router = useRouter();
   const params = useSearchParams();
   const redirectTo = params.get("redirectTo") ?? "/";
+  const { address } = useAccount();
+  const isSignUp = mode === "sign-up";
+  const walletInputValue = isSignUp ? walletAddress || address || "" : walletAddress;
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,7 +40,7 @@ export function AuthForm({ mode, locale }: { mode: AuthMode; locale: Locale }) {
             options: {
               data: {
                 display_name: displayName,
-                wallet_address: walletAddress,
+                wallet_address: walletInputValue,
               },
             },
           });
@@ -47,11 +51,13 @@ export function AuthForm({ mode, locale }: { mode: AuthMode; locale: Locale }) {
       return;
     }
 
+    if (mode === "sign-up") {
+      fetch("/api/welcome-email", { method: "POST" }).catch(() => undefined);
+    }
+
     router.push(mode === "sign-in" ? redirectTo : "/write");
     router.refresh();
   }
-
-  const isSignUp = mode === "sign-up";
 
   return (
     <form className="auth-card" onSubmit={onSubmit}>
@@ -77,12 +83,26 @@ export function AuthForm({ mode, locale }: { mode: AuthMode; locale: Locale }) {
           <label>
             {t.walletAddress}
             <input
-              value={walletAddress}
+              value={walletInputValue}
               onChange={(event) => setWalletAddress(event.target.value)}
               placeholder="0x..."
               required
             />
           </label>
+          <div className="wallet-fill-row">
+            <p className="muted text-sm">
+              {address ? t.connectedWalletReady : t.connectWalletToFill}
+            </p>
+            {address ? (
+              <button
+                className="mini-button"
+                onClick={() => setWalletAddress(address)}
+                type="button"
+              >
+                {t.useConnectedWallet}
+              </button>
+            ) : null}
+          </div>
         </>
       ) : null}
 
