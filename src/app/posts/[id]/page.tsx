@@ -1,8 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MarkdownBody } from "@/components/posts/markdown-body";
 import { SubscribeButton } from "@/components/wallet/subscribe-button";
 import { getUser } from "@/lib/auth";
+import { getCoverUrl } from "@/lib/images";
 import { getDictionary } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 import { createClient } from "@/lib/supabase/server";
@@ -56,6 +58,15 @@ export default async function PostPage({
         </p>
         <h1>{publicPost.title}</h1>
         <time>{new Date(publicPost.created_at).toLocaleString()}</time>
+        {publicPost.cover_path ? (
+          <Image
+            alt=""
+            className="post-cover"
+            height={675}
+            src={getCoverUrl(publicPost.cover_path) ?? ""}
+            width={1200}
+          />
+        ) : null}
 
         {canReadBody ? (
           <MarkdownBody body={bodyPost?.body ?? ""} />

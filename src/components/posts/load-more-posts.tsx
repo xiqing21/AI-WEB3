@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n";
+import { getCoverUrl } from "@/lib/images";
 
 type FeedPost = {
   id: string;
@@ -53,7 +55,16 @@ export function LoadMorePosts({
         {posts.map((post) => (
           <Link className="post-card" href={`/posts/${post.id}`} key={post.id}>
             <div className="post-card-image">
-              {post.cover_path ? <span>{post.title.slice(0, 1)}</span> : null}
+              {post.cover_path ? (
+                <Image
+                  alt=""
+                  fill
+                  sizes="(max-width: 760px) 100vw, 33vw"
+                  src={getCoverUrl(post.cover_path) ?? ""}
+                />
+              ) : (
+                <span>{post.title.slice(0, 1)}</span>
+              )}
             </div>
             <div>
               <time>{new Date(post.created_at).toLocaleDateString()}</time>

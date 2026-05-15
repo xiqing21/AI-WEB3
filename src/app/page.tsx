@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { getCoverUrl } from "@/lib/images";
 import { getDictionary } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n-server";
 import { createClient } from "@/lib/supabase/server";
@@ -71,7 +73,16 @@ export default async function Home() {
               key={post.id}
             >
               <div className="post-card-image">
-                <span>{post.title.slice(0, 1)}</span>
+                {"cover_path" in post && post.cover_path ? (
+                  <Image
+                    alt=""
+                    fill
+                    sizes="(max-width: 760px) 100vw, 33vw"
+                    src={getCoverUrl(post.cover_path) ?? ""}
+                  />
+                ) : (
+                  <span>{post.title.slice(0, 1)}</span>
+                )}
               </div>
               <div>
                 <time>

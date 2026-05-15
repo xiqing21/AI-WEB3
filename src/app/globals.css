@@ -290,7 +290,24 @@ time {
   border-radius: 16px;
   display: flex;
   min-height: 134px;
+  overflow: hidden;
   justify-content: center;
+  position: relative;
+}
+
+.post-card-image img,
+.post-cover {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.post-cover {
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  max-height: 460px;
 }
 
 .post-card-image span {
